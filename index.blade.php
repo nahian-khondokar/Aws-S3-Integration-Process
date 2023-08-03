@@ -33,7 +33,7 @@ $file_path = 'media/slider/'.$request->header('id').'/';
 $mainImageName = time() . '_slider_image.' . $photo->getClientOriginalExtension();
 
 // function call
-$s3_image_url = S3ImageHelpers($file_path, $photo, $mainImageName);
+$s3_image_url = S3ImageHelpers($s3FilePath, $resizedImage);
 
 
 // =========== Notes =========
