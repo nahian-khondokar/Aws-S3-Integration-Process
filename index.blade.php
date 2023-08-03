@@ -29,8 +29,11 @@ Storage::disk('s3')->delete('media/slider/'.'/'.$image_name.'');
 
 
 // store image to s3 aws
-$file_path = 'media/slider/'.$request->header('id').'/';
-$mainImageName = time() . '_slider_image.' . $photo->getClientOriginalExtension();
+$file = $request->file('category_image');
+$resizedImage = imageResize($file, 720, 400);
+$filePath = Category::FILEPATH . $request->header('id') . '/';
+$s3FilePath = $filePath . time() . rand() . '_category_image.' . $file->getClientOriginalExtension();
+$s3ImageUrl = S3ImageHelpers($s3FilePath, $resizedImage);
 
 // function call
 $s3_image_url = S3ImageHelpers($s3FilePath, $resizedImage);
