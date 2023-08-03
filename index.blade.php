@@ -1,16 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
-function S3ImageHelpers($file_path, $file=null, $fileName){
+function S3ImageHelpers($s3FilePath, $resizedImage): string
+{
+    Storage::disk('s3')->put($s3FilePath, $resizedImage);
+    $s3File = Storage::disk('s3')->url($s3FilePath);
 
-    // Image upload to AWS S3
-    Storage::disk('s3')->putFileAs($file_path, $file, $fileName);
-    $fileUrl = Storage::disk('s3')->url($file_path . $fileName);
-
-    return $fileUrl;
-
+    return $s3File;
 }
+
+function imageResize($file, $width, $height): string
+{
+    // image resize
+    $resizedImage = Image::make($file)->resize(1920, 700, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    })->encode();
+
+    return $resizedImage;
+}
+
 
 
 // image delete form S3
